@@ -1,0 +1,184 @@
+let pedidos = [];
+
+function hacerPedido() {
+    if (carrito.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+    }
+
+    const nuevoPedido = {
+        numero: pedidos.length + 1,
+        productos: JSON.parse(
+            JSON.stringify(carrito)
+        ),
+        subtotal: subtotal,
+        iva: iva,
+        total: total,
+        fecha: new Date().toLocaleString(),
+        estado: "Pedido recibido",
+        cancelado: false
+    };
+
+    pedidos.push(nuevoPedido);
+
+    mostrarPedidos();
+
+    crearEstadoPedido(
+        nuevoPedido.numero
+    );
+
+    estadoPedido(
+        nuevoPedido.numero
+    );
+
+    carrito.length = 0;
+
+    mostrarCarrito();
+
+    calcularTotal();
+
+    alert(
+        `Pedido #${nuevoPedido.numero} confirmado correctamente.`
+    );
+}
+
+function mostrarPedidos() {
+    const lista =
+        document.getElementById(
+            "listaPedidos"
+        );
+
+    if (!lista) return;
+
+    lista.innerHTML = "";
+
+    pedidos.forEach(pedido => {
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "pedido-card";
+
+        let productosHTML = "";
+
+        pedido.productos.forEach(
+            producto => {
+                productosHTML += `
+                    <p>
+                        ${producto.nombre}
+                        x ${producto.cantidad}
+                    </p>
+                `;
+            }
+        );
+
+        div.innerHTML = `
+            <h3>
+                Pedido #${pedido.numero}
+            </h3>
+
+            <p>
+                Fecha: ${pedido.fecha}
+            </p>
+
+            <p>
+                <strong>
+                    Estado: ${pedido.estado}
+                </strong>
+            </p>
+
+            <div>
+                ${productosHTML}
+            </div>
+
+            <p>
+                Subtotal:
+                $${pedido.subtotal.toFixed(2)}
+            </p>
+
+            <p>
+                IVA:
+                $${pedido.iva.toFixed(2)}
+            </p>
+
+            <p>
+                <strong>
+                    Total:
+                    $${pedido.total.toFixed(2)}
+                </strong>
+            </p>
+        `;
+
+        lista.appendChild(div);
+    });
+}
+
+function listarPedidos() {
+    mostrarPedidos();
+}
+
+function listarPedidosConsola() {
+    console.log("----- PEDIDOS -----");
+
+    pedidos.forEach(pedido => {
+        console.log(`Pedido #${pedido.numero}`);
+
+        pedido.productos.forEach(producto => {
+            console.log(
+                `${producto.nombre} x${producto.cantidad} - $${(
+                    producto.precio * producto.cantidad
+                ).toFixed(2)}`
+            );
+        });
+
+        console.log(`Subtotal: $${pedido.subtotal.toFixed(2)}`);
+        console.log(`IVA: $${pedido.iva.toFixed(2)}`);
+        console.log(`Total: $${pedido.total.toFixed(2)}`);
+        console.log(`Estado: ${pedido.estado}`);
+    });
+}
+
+function calcularIngresosTotales() {
+    let ingresos = 0;
+
+    pedidos.forEach(pedido => {
+        ingresos = ingresos + pedido.total;
+    });
+
+    console.log(`Ingresos totales: $${ingresos.toFixed(2)}`);
+    return ingresos;
+}
+
+function contarProductosVendidos() {
+    let totalProductos = 0;
+
+    pedidos.forEach(pedido => {
+        pedido.productos.forEach(producto => {
+            totalProductos = totalProductos + producto.cantidad;
+        });
+    });
+
+    console.log(`Productos vendidos en total: ${totalProductos}`);
+    return totalProductos;
+}
+
+function onPedidoListo(numero, mensaje) {
+    const pedido = pedidos.find(pedido => pedido.numero === numero);
+
+    if (!pedido || pedido.cancelado) return;
+
+    pedido.estado = "Preparado y listo para entregar";
+    mostrarPedidos();
+    console.log(`Pedido #${numero}: ${mensaje}`);
+}
+
+function onPedidoCancelado(numero, mensaje) {
+    const pedido = pedidos.find(pedido => pedido.numero === numero);
+
+    if (!pedido) return;
+
+    pedido.cancelado = true;
+    pedido.estado = "Cancelado";
+    mostrarPedidos();
+    console.log(`Pedido #${numero} cancelado: ${mensaje}`);
+}
