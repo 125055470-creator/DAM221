@@ -1,8 +1,9 @@
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, TextInput } from 'react-native';
 import { useState } from 'react';
 import TarjetasScreen from './TarjetasScreen';
 import SafeScreen from './SafeScreen';
 import PressableScreen from './PressableScreen';
+import TexttInput from './TexttInput';
 
 /* 2.- Zona render o Main*/
 export default function MenuScreen() {
@@ -16,7 +17,7 @@ export default function MenuScreen() {
         case 'pressable':
             return <PressableScreen/>
         case 'text':
-            return <TextScreen/>
+            return <TexttInput/>
         case 'flat':
             return <FlatScreen />      
         case 'image':
