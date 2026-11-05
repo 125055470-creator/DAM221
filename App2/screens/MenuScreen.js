@@ -5,6 +5,7 @@ import SafeScreen from './SafeScreen';
 import PressableScreen from './PressableScreen';
 import TexttInput from './TexttInput';
 import FlatScreen from './FlatScreen';
+import ImageScreen from './ImageScreen';
 
 /* 2.- Zona render o Main*/
 export default function MenuScreen() {
