@@ -42,7 +42,7 @@ export default function ConsultaUsuariosScreen() {
 
       <FlatList
         data={usuarios}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.nombre}
         renderItem={renderTarjeta}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}

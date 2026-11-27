@@ -1,4 +1,5 @@
 import { guardarUsuario } from "../storage/localStorage";
+import { actualizar } from "../storage/localStorage";
 
 export function registrarUsuario(nombre, edad) {
 
@@ -13,6 +14,25 @@ export function registrarUsuario(nombre, edad) {
     }
 
     guardarUsuario({ nombre, edad: edadNumero });
+
+    return true;
+}
+
+export function actualizarUsuario(nombreAnterior, nombre, edad) {
+    if (nombre.trim() === "") {
+        return false;
+    }
+
+    const edadNumero = Number(edad);
+
+    if (isNaN(edadNumero) || edadNumero < 0) {
+        return false;
+    }
+
+    actualizar(nombreAnterior, {
+        nombre: nombre,
+        edad: edadNumero
+    });
 
     return true;
 }
